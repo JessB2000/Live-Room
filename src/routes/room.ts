@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { RoomModel } from '../entity/room';
 
 
 export async function createRoom(req: Request, res: Response) {
