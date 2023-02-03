@@ -1,7 +1,13 @@
 import { Router } from "express";
-import { createRoom, deleteRoom, updateRoom } from "../routes/room";
+import { createRoom, deleteRoom, getRoom, getRooms, updateRoom } from "../routes/room";
 
 const RoomRouter = Router();
+
+RoomRouter.route('/rooms')
+    .get(getRooms);
+
+RoomRouter.route('/rooms/:creator')
+    .get(getRoom);
 
 RoomRouter.route('/create')
     .post(createRoom);

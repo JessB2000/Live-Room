@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import logger from 'morgan';
 import { dbConnection } from './config/db';
+import RoomRouter from './controller/room';
 
 
 export const app = express();
@@ -13,5 +14,5 @@ app.use(logger('dev'));
 
 dbConnection();
 
-app.use('/room', );
+app.use('/room', RoomRouter);
 app.use('/', (req, res) => res.send('Video room api'));

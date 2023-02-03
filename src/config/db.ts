@@ -18,3 +18,5 @@ console.log('Conexão com mongodb estável');
 }
 mongoose.Promise = global.Promise; 
 
+export default mongoose; 
+
