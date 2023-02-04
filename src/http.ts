@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import path from "path"; 
 import express from "express";
 
-app.use(express.static(path.join(__dirname, "")))
+app.use(express.static(path.join(__dirname, "..", "front-end")))
 
 const httpServer = http.createServer(app);
 
