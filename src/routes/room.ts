@@ -3,13 +3,12 @@ import { RoomModel } from '../entity/room';
 
 
 export async function getRooms(req: Request, res: Response) {
-    const room =  await RoomModel.find(req.body);
+    const room =  await RoomModel.find();
     return res.json({data:room});
 }
 
 export async function getRoom(req: Request, res: Response) {
-    const room = req.body;
-    await RoomModel.find(room);
+    const room = await RoomModel.findOne({creator: req.params.creator});
     if (!room) return res.status(500).json({ msg: "Room not found" });
     return res.json({data:room});
 }
@@ -29,8 +28,7 @@ export async function createRoom(req: Request, res: Response) {
 }
 
 export async function deleteRoom(req: Request, res: Response) {
-    const room = req.body;
-    await RoomModel.findOneAndDelete(room);
+   const room =  await RoomModel.findOneAndDelete({creator:req.params.creator});
     if (!room) return res.status(500).json({ msg: "Room not found" });
     return res.json({
         error: false,
