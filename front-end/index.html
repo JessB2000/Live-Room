@@ -5,57 +5,84 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css" />
     <title>Live-Room</title>
 </head>
 
 <body>
     <main>
         <div id="main">
+            <div id="group">
+                <div id="container1">
+                    <p class="first">Crie uma sala e divirta-se!</p>
+                    <div id="inputs">
+                        <div id="input1">
+                            <p class="second">Crie uma sala nova</p>
+                            <div id="myinputs">
+                                <div id="inputs1">
+                                    <input type="text" name="" id="inputName" placeholder="Nome da sala">
+                                    <input type="text" name="" id="inputMovie" placeholder="Link do video">
+                                </div>
+                              <div id="inputs2">
+                                <input type="button" id="create" value="Criar Sala">   
+                              </div>
+                            </div>
+                                 
+                   
+                         </div>
+                       
+                        <div id="input2">
+                            <p class="third">Entre em uma sala anterior com o id</p>
+                            <div id="myinputs2">
+                                <input type="text" name="" id="sala" placeholder="Id da sala">
+                                <input type="button" value="Entrar na sala" id="entrar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             <div id="container2">
+                <img src="https://img.freepik.com/fotos-premium/grupo-de-pessoas-assistindo-videos-na-internet-juntas_259150-4651.jpg" alt="">
 
-            <input type="text" name="" id="inputName">
-            <input type="text" name="" id="inputMovie">
-            <input type="button" id="create" value="Criar Sala">
-            <input type="text" name="" id="sala">
-            <input type="button" value="entrar na sala" id="entrar">
-        
+             </div>
+            </div>
+               
         </div>
-
     </main>
 </body>
 
-    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
-        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
-        crossorigin="anonymous"></script>
-    <script>
-        var socket = io.connect("http:///");
-        var currentIdRoom = null
+<script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+    integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+    crossorigin="anonymous"></script>
+<script>
+    var socket = io.connect("http:///");
+    var currentIdRoom = null
 
-        socket.on("connect", function () {
+    socket.on("connect", function () {
 
-        });
+    });
 
-        socket.on("connection", function (sc) {
-            currentIdRoom = sc
-            console.log(sc)
-        });
+    socket.on("connection", function (sc) {
+        currentIdRoom = sc
+        console.log(sc)
+    });
 
-        socket.on("removeRoom", function (roomId) {
-            console.log("removeu");
-        });
+    socket.on("removeRoom", function (roomId) {
+        console.log("removeu");
+    });
 
-        const roomName = document.getElementById("inputName")
-        const texto = document.getElementById("inputMovie")
-        const button = document.getElementById("create")
-        button.addEventListener("click", async () => {
-            console.log(texto.value);
-            const res = await fetch(`http://localhost:3000/create?nameRoom=${roomName.value}&linkVideo=${texto.value}`)
-            const result = await res.json();
-            createNewRoom(texto.value, result.roomId); 
-            console.log(result.roomId)
-            currentIdRoom = result.roomId; 
-        })
-      
-    function createNewRoom(linkVideo, id_Room){ 
+    const roomName = document.getElementById("inputName")
+    const texto = document.getElementById("inputMovie")
+    const button = document.getElementById("create")
+    button.addEventListener("click", async () => {
+        console.log(texto.value);
+        const res = await fetch(`http://localhost:3000/create?nameRoom=${roomName.value}&linkVideo=${texto.value}`)
+        const result = await res.json();
+        createNewRoom(texto.value, result.roomId);
+        console.log(result.roomId)
+        currentIdRoom = result.roomId;
+    })
+
+    function createNewRoom(linkVideo, id_Room) {
         document.getElementById("main").remove();
         document.querySelector("main").innerHTML = `
         <main>
@@ -66,49 +93,179 @@
         allowfullscreen></iframe>
       
        <div>
-        <p> O link para a sala é: </p>
+        <p class="msg1"> O link para a sala é: </p>
         <p id="link"> ${id_Room} </p> 
         </div>
 
         <div>
-        <p> Para deletar sala, aperte: </p>
-        <input type="button" name="" id="remove">
+        <p class = "msg2"> Para deletar sala, aperte: </p>
+        <input type="button" value="Deletar sala" id="remove">
         </div>
+
         </div>
         </main>
         `
-      const box = document.getElementById("remove");
-      const roomVideo = document.getElementById("room");
-      box.addEventListener("click", async () => {
-           console.log("valor do id: ", currentIdRoom); 
+        const box = document.getElementById("remove");
+        const roomVideo = document.getElementById("main");
+        box.addEventListener("click", async () => {
+            removeThisRoom(currentIdRoom);
             const res = await fetch(`http://localhost:3000/delete?roomId=${currentIdRoom}`)
             const result = await res.json();
-            removeThisRoom(currentIdRoom); 
             console.log(result);
         })
-    }
-    function removeThisRoom(room){
-        document.getElementById("main").remove();
-        document.querySelector("main").innerHTML =`
-        <p> Fim de chat</p>
+        function removeThisRoom(room) {
+            roomVideo.remove();
+            document.querySelector("main").innerHTML = `
+        <main>
+        <p id= "msgFim"> Você deletou a sala</p>
+        </main>
         `
+        }
     }
-
     const boxEntrar = document.getElementById("entrar");
     const inputSala = document.getElementById("sala");
-      boxEntrar.addEventListener("click", async () => {
-            const res = await fetch(`http://localhost:3000/enter?roomId=${inputSala.value}`)
-            if(res.status == 200){
+    boxEntrar.addEventListener("click", async () => {
+        const res = await fetch(`http://localhost:3000/enter?roomId=${inputSala.value}`)
+        if (res.status == 200) {
             const result = await res.json();
             createNewRoom(result.video, result.idRoom);
             currentIdRoom = inputSala.value;
-            }
-            else {
-                alert('sala não encontrada'); 
-            }
-            console.log(result);
-        })
-    </script>
+        }
+        else {
+            alert('sala não encontrada');
+        }
+        console.log(result);
+    })
+</script>
+ <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Roboto:wght@100&display=swap');
+    body{
+        background-color: #DDA0DD;
+    }
+    #inputs{
+        display: flex;
+        flex-direction: column;
+    }
+    #myinputs{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    #myinputs2{
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    img{
+        margin-top: 120px;
+        width: 600px;
+        height: 400px;
+        border: 8px solid #C0C0C0;
+    }
+    #group{
+        display: flex;
+        flex-direction: row;
+        gap: 150px;
+    }
+    p{
+    font-family: 'Anton';
+    font-style: regular;
+    font-weight: 400;
+    color: #4B0082;
 
+    }
+    .first{
+    font-size: 40px;
+    }
+    .second{
+    font-size: 26px;
+    }
+    .third{
+     font-size: 26px;
+    }
+    .msg1{
+     font-size: 26px;
+    }
+    #link{
+        font-size: 26px;
+        color:black;
+    }
+    .msg2{
+        font-size: 26px;
+    }
+    #create{
+    border: none;
+    padding: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .3s;
+    border-radius: 5px;
+    color: black;
+    font-family: 'Anton';
+    font-size: 18px;
+    width: 120px;
+    }
+    #remove{
+    border: none;
+    padding: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .3s;
+    border-radius: 5px;
+    color: black;
+    font-family: 'Anton';
+    font-size: 18px;
+    width: 120px;
+    }
+    #entrar{
+    border: none;
+    padding: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .3s;
+    border-radius: 5px;
+    width: 140px;
+    color: black;
+    font-family: 'Anton';
+    font-size: 18px;
+    }
+#inputName{
+  color:black;
+  font-size: 18px;
+  width: 140px;
+  padding: 20px 5px 5px;
+  background-color:  #fff;
+  border: none;
+  border-radius: 4px;
+  height: 22px;
+  font-family: 'Anton';
+    }
+#inputMovie{
+  color: black;
+  font-size: 18px;
+  width: 230px;
+  padding: 20px 5px 5px;
+  background-color: #fff;
+  border: none;
+  height: 22px;
+  border-radius: 4px;
+  font-family: 'Anton';
+    }
+    #sala{
+  color: black;
+  font-size: 18px;
+  width: 230px;
+  padding: 20px 5px 5px;
+  background-color: #fff;
+  height: 22px;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Anton';
+    }
+    #msgFim{
+        text-align: center;
+        font-size: 40px;
+    }
+ </style>
 
 </html>
