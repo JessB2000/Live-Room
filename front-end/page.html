@@ -10,25 +10,25 @@
 
 <body>
     <p>Crie a sua sala e divirta-se com seus amigos!</p>
+    <input id="nameC" type="button" value="Nome da sala">
+
+    <input id="linkV" type="button" value="Url do vídeo">
+
     <input type="button" value="Clique para criar nova sala">
-
-    <div id="modal-container" class="modal">
-        <form id="forms" class="formado">
-            <div id="form1">
-                <p class="addP">Adicionar nova sala </p>
-                <div id="form12">
-                    <input type="text" class="name" id="nameC" placeholder="Nome do criador da sala" autocomplete="off">
-                    <input type="text" min="1" class="link" id="linkV" placeholder="Link do vídeo a ser transmitido"
-                        autocomplete="off">
-                </div>
-            </div>
-            <div id="form2">
-                <button type="reset" class="botao1">Criar Sala</button>
-                <button type="reset" class="botao2">Cancelar</button>
-            </div>
-        </form>
     </div>
-    <script src="page.js"></script>
+   
 </body>
+<script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+        crossorigin="anonymous"></script>
+   <script>
+    var socket = io.connect("http:///");
 
+socket.on("connect", function() {
+});
+
+socket.on("update", function(data) {
+console.log(data); 
+});
+</script>
 </html>

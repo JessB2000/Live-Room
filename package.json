@@ -21,7 +21,7 @@
   "homepage": "https://github.com/JessB2000/Live-Room-Back-End#readme",
   "devDependencies": {
     "@types/cors": "^2.8.13",
-    "@types/express": "^4.17.16",
+    "@types/express": "^4.17.17",
     "@types/morgan": "^1.9.4",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.5"

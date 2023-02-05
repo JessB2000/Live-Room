@@ -6,16 +6,16 @@ const RoomRouter = Router();
 RoomRouter.route('/rooms')
     .get(getRooms);
 
-RoomRouter.route('/rooms/:creator')
+RoomRouter.route('/rooms/:_id')
     .get(getRoom);
 
 RoomRouter.route('/create')
     .post(createRoom);
 
-RoomRouter.route('/delete/:creator')
+RoomRouter.route('/delete/:_id')
     .delete(deleteRoom);
 
-RoomRouter.route('/update/:creator')
+RoomRouter.route('/update/:_id')
     .patch(updateRoom);
 
 export default RoomRouter;

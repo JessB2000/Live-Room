@@ -1,15 +1,3 @@
-const socket = io(); // usuário se conecta a aplicação
-
-const urlSearch = new URLSearchParams(window.location.search); //informações que o usuário irá receber
-const username = urlSearch.get("nameC"); // nome
-const myRoom = urlSearch.get("linkV") // link do vídeo
-
-// emit => emitir iformação
-
-// on => escutando alguma informação
-
-
-
 const room = {
     roomId: "12012",
     userMaster: "1720",

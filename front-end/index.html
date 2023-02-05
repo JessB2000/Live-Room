@@ -9,7 +9,65 @@
 </head>
 
 <body>
-    <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/p9DVWhe5Euw"
+    <main>
+        <div id="main">
+
+            <input type="text" name="" id="inputMovie">
+            <input type="button" id="create">
+            <input type="text" name="" id="inputRoom">
+            <input type="button" id="enter" value="entrar na sala">
+        
+        </div>
+
+    </main>
+</body>
+
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+        crossorigin="anonymous"></script>
+    <script>
+        var socket = io.connect("http:///");
+        var currentIdSocket = null
+
+        socket.on("connect", function () {
+
+        });
+
+        socket.on("connection", function (sc) {
+            currentIdSocket = sc
+            console.log(sc)
+        });
+
+        socket.on("update", function (data) {
+            console.log(data);
+        });
+
+        socket.on("newUser", function (data) {
+            console.log(data);
+        });
+
+        const texto = document.getElementById("inputMovie")
+        const button = document.getElementById("create")
+        button.addEventListener("click", async () => {
+           
+            const res = await fetch(`http://localhost:3000/create?userId=${currentIdSocket}&movieId=${texto.value}`)
+            const result = await res.json();
+            createNewRoom(); 
+            console.log(result);
+        })
+
+        const textoSala = document.getElementById("inputRoom")
+        const buttonSala = document.getElementById("enter")
+        buttonSala.addEventListener("click", async () => {
+            const res = await fetch(`http://localhost:3000/enter?userId=${currentIdSocket}&roomId=${textoSala.value}`)
+            const result = await res.json();
+            createNewRoom(); 
+            console.log(result);
+        })
+
+    function createNewRoom(){
+        document.getElementById("main").remove();
+        document.querySelector("main").innerHTML = `<iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/p9DVWhe5Euw"
         title="YouTube video player" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen></iframe>
@@ -18,8 +76,76 @@
         <ul id="users">
 
         </ul>
-    </div>
-    <script src="script.js"></script>
-</body>
+    </div> `
+    }
+
+    const room = {
+    roomId: "12012",
+    userMaster: "1720",
+    movieId: "2520",
+    timeMovie: "2000",
+    usersInvited: [
+        {
+            id: "1724",
+        },
+    ],
+};
+
+const newRoom = {
+    roomId: "120120",
+    userMaster: "17200",
+    movieId: "https://www.youtube.com/embed/qQeGOVQIZQQ",
+    timeMovie: "20000",
+    usersInvited: [
+        {
+            id: "17240",
+        },
+    ],
+};
+
+
+
+
+
+
+
+const setMovie = (link) => {
+    document.getElementById("video").setAttribute("src", link);
+};
+
+const setTimeMovie = () => { };
+
+const addUser = (user) => {
+    const li = document.createElement("li");
+    li.innerHTML = `Usuário: ${user}`
+    li.setAttribute("id", user);
+    document.getElementById("users").appendChild(li);
+};
+
+const removeUser = (user) => {
+   // document.getElementById(user).remove(); 
+ };
+
+const updateRoom = (room, newRoom) => {
+    newRoom.movieId != room.movieId && setMovie(newRoom.movieId);
+
+    newRoom.timeMovie != room.timeMovie && setTimeMovie(newRoom.timeMovie);
+
+    room.usersInvited.forEach((user) => {
+        if (newRoom.usersInvited.find((us) => us.id == user.id) == null) {
+            removeUser(user.id);
+        }
+    });
+
+    newRoom.usersInvited.forEach((user) => {
+        if (room.usersInvited.find((us) => us.id == user.id) == null) {
+            addUser(user.id);
+        }
+    });
+};
+
+updateRoom(room, newRoom); 
+    </script>
+
 
 </html>
