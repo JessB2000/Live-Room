@@ -10,6 +10,13 @@ const schema = new mongoose.Schema(
     video: {
       type: String,
       required: true,
+      unique: false,
+      lowercase: false,
+      trim: true,
+    },
+    idRoom: {
+      type: String,
+      required: true,
       unique: true,
       lowercase: true,
       trim: true,

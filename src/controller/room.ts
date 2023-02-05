@@ -12,7 +12,7 @@ RoomRouter.route('/rooms/:_id')
 RoomRouter.route('/create')
     .post(createRoom);
 
-RoomRouter.route('/delete/:_id')
+RoomRouter.route('/delete/:video')
     .delete(deleteRoom);
 
 RoomRouter.route('/update/:_id')

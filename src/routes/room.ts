@@ -27,7 +27,7 @@ export async function createRoom(req: Request, res: Response) {
 }
 
 export async function deleteRoom(req: Request, res: Response) {
-   const room =  await RoomModel.findOneAndDelete({creator:req.params._id});
+   const room =  await RoomModel.findOneAndDelete({video:req.params.video});
     if (!room) return (res.status(500).json({ msg: "Room not found" }));
     return (res.json({
         error: false,

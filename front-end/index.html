@@ -15,6 +15,8 @@
             <input type="text" name="" id="inputName">
             <input type="text" name="" id="inputMovie">
             <input type="button" id="create" value="Criar Sala">
+            <input type="text" name="" id="sala">
+            <input type="button" value="entrar na sala" id="entrar">
         
         </div>
 
@@ -26,30 +28,18 @@
         crossorigin="anonymous"></script>
     <script>
         var socket = io.connect("http:///");
-        var currentIdSocket = null
+        var currentIdRoom = null
 
         socket.on("connect", function () {
 
         });
 
         socket.on("connection", function (sc) {
-            currentIdSocket = sc
+            currentIdRoom = sc
             console.log(sc)
         });
 
-       /* socket.on("update", function (data) { // não deu tempo de ser implementada
-            console.log(data);
-        });*/
-
-       /* socket.on("newUser", function (data) {
-            addUser(user);
-        });*/
-        
-       /* socket.on("exitUser", function (data) {
-            removeUser(user);
-        });*/ 
-
-        socket.on("removeRoom", function (data) {
+        socket.on("removeRoom", function (roomId) {
             console.log("removeu");
         });
 
@@ -57,36 +47,27 @@
         const texto = document.getElementById("inputMovie")
         const button = document.getElementById("create")
         button.addEventListener("click", async () => {
-            console.log(roomName.value); 
-            const res = await fetch(`http://localhost:3000/create?nameRoom=${roomName.value}&roomId=${texto.value}`)
+            console.log(texto.value);
+            const res = await fetch(`http://localhost:3000/create?nameRoom=${roomName.value}&linkVideo=${texto.value}`)
             const result = await res.json();
-            createNewRoom(); 
-            console.log(result);
+            createNewRoom(texto.value, result.roomId); 
+            console.log(result.roomId)
+            currentIdRoom = result.roomId; 
         })
-
-       /* const textoSala = document.getElementById("inputRoom")
-        const buttonSala = document.getElementById("enter")
-        buttonSala.addEventListener("click", async () => {
-            const res = await fetch(`http://localhost:3000/enter?userId=${currentIdSocket}&roomId=${textoSala.value}`)
-            const result = await res.json();
-            addUser(currentIdSocket);
-            createNewRoom(textoSala.value);  
-            console.log(result);
-        })*/
       
-    function createNewRoom(){
+    function createNewRoom(linkVideo, id_Room){ 
         document.getElementById("main").remove();
         document.querySelector("main").innerHTML = `
         <main>
         <div id="main">
-        <iframe id="video" width="560" height="315" src=${setMovie}
+        <iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/${linkVideo}"
         title="YouTube video player" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen></iframe>
       
        <div>
         <p> O link para a sala é: </p>
-        <input type="text" name="" id="link">
+        <p id="link"> ${id_Room} </p> 
         </div>
 
         <div>
@@ -97,81 +78,36 @@
         </main>
         `
       const box = document.getElementById("remove");
-      const roomVideo = document.getElementById("room"); 
+      const roomVideo = document.getElementById("room");
       box.addEventListener("click", async () => {
-            console.log(roomName.value); 
-            const res = await fetch(`http://localhost:3000/delete?roomId=${texto.value}`)
+           console.log("valor do id: ", currentIdRoom); 
+            const res = await fetch(`http://localhost:3000/delete?roomId=${currentIdRoom}`)
             const result = await res.json();
-            removeThisRoom(texto.value); 
+            removeThisRoom(currentIdRoom); 
             console.log(result);
         })
     }
     function removeThisRoom(room){
         document.getElementById("main").remove();
         document.querySelector("main").innerHTML =`
-        <p> fim de chat</p>
+        <p> Fim de chat</p>
         `
     }
-    const room = {
-    roomId: "12012",
-    userMaster: "1720",
-    movieId: "2520",
-    timeMovie: "2000",
-    usersInvited: [
-        {
-            id: "1724",
-        },
-    ],
-};
 
-const newRoom = {
-    roomId: "120120",
-    userMaster: "17200",
-    movieId: "https://www.youtube.com/embed/qQeGOVQIZQQ",
-    timeMovie: "20000",
-    usersInvited: [
-        {
-            id: "17240",
-        },
-    ],
-};
-
-const setMovie = (link) => {
-    document.getElementById("inputMovie").setAttribute("src", link);
-};
-
-const setTimeMovie = () => { };
-
-/*const addUser = (user) => {
-    const li = document.createElement("li");
-    li.innerHTML = `Usuário: ${user}`
-    li.setAttribute("id", user);
-    document.getElementById("users").appendChild(li);
-};
-
-const removeUser = (user) => {
-   document.getElementById(user).remove(); 
- };
-
-const updateRoom = (room, newRoom) => {
-    newRoom.movieId != room.movieId && setMovie(newRoom.movieId);
-
-    newRoom.timeMovie != room.timeMovie && setTimeMovie(newRoom.timeMovie);
-
-    room.usersInvited.forEach((user) => {
-        if (newRoom.usersInvited.find((us) => us.id == user.id) == null) {
-            removeUser(user.id);
-        }
-    });
-
-    newRoom.usersInvited.forEach((user) => {
-        if (room.usersInvited.find((us) => us.id == user.id) == null) {
-            addUser(user.id);
-        }
-    });
-};
-
-updateRoom(room, newRoom); */
+    const boxEntrar = document.getElementById("entrar");
+    const inputSala = document.getElementById("sala");
+      boxEntrar.addEventListener("click", async () => {
+            const res = await fetch(`http://localhost:3000/enter?roomId=${inputSala.value}`)
+            if(res.status == 200){
+            const result = await res.json();
+            createNewRoom(result.video, result.idRoom);
+            currentIdRoom = inputSala.value;
+            }
+            else {
+                alert('sala não encontrada'); 
+            }
+            console.log(result);
+        })
     </script>
 
 

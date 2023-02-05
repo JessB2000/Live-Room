@@ -12,7 +12,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
-dbConnection();
 
 app.use('/room', RoomRouter);
 app.use('/', (req, res) => res.send('Video room api'));
