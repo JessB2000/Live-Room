@@ -1,14 +1,13 @@
-const express = require("express");
+import express from "express"
+import http from "http"; 
+import { Server } from "socket.io";
 const app = express();
-const http = require("http");
 const server = http.createServer(app);
-const { Server } = require("socket.io");
 const io = new Server(server);
 import { RoomModel } from "./entity/room";
 import {dbConnection} from "./config/db"
 import RoomRouter from "./controller/room";
 import { deleteRoom } from "./routes/room";
-
 const dbRoom = RoomModel;
 
 app.get("/", (req: any, res: any) => {
